@@ -1,7 +1,10 @@
 const express = require('express')
+mongoose = require('mongoose')
 const usersRouts = express.Router()
 const json = express.json()
 const userModel = require('../models/usersModel.js')
+const postModel = require('../models/postsModel.js')
+
 bodyParser = require('body-parser').json();
 
 usersRouts.get('/', async (req, resp) => {
@@ -29,6 +32,23 @@ usersRouts.get('/:id', async (req, resp) => {
         resp.json(error)
     }
 })
+
+
+usersRouts.get('/:id/posts', async (req, resp) => {
+    const {
+        id
+    } = req.params
+    try {
+        const post = await postModel.find({
+            author: id
+        })
+        resp.json(post)
+
+    } catch (error) {
+        resp.json(error)
+    }
+})
+
 
 usersRouts.post('/', bodyParser, async (req, resp) => {
     var {
@@ -84,6 +104,18 @@ usersRouts.delete('/:id', async (req, res) => {
     const {
         id
     } = req.params
+    try {
+        idd = mongoose.Types.ObjectId(id)
+        const post = await postModel.deleteMany({
+            author: idd
+        }, {
+            returnOriginal: false
+        })
+        res.json(post)
+
+    } catch (error) {
+        res.json(error)
+    }
     try {
         const deletedUser = await userModel.findOneAndDelete({
             _id: id
