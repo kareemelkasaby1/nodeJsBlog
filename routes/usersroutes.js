@@ -111,7 +111,6 @@ usersRouts.delete('/:id', async (req, res) => {
         }, {
             returnOriginal: false
         })
-        res.json(post)
 
     } catch (error) {
         res.json(error)
